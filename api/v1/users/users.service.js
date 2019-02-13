@@ -1,5 +1,6 @@
 const userModel=require('./users.entity');
 const bcrypt=require('bcrypt');
+
 const register=function(user,done){
     let userData=new userModel(user);
     userData.save((err,res)=>{
@@ -22,4 +23,23 @@ const hashPassword=function(user,done){
         });
     });
 }
-module.exports={register,hashPassword}
+
+const findUser=function(user,done){
+    return userModel.findOne(user).exec()
+        .then((data)=>{
+            return data;
+    },
+    (e)=>{
+        return e
+    })
+}
+
+const comparePassword=function(user,input,done){
+        return bcrypt.compare(input.password,user.password).then(function(res) {
+            return res
+        },
+    (e)=>{
+        return e
+    });
+}
+module.exports={register,hashPassword,findUser,comparePassword}

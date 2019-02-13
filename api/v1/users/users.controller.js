@@ -8,5 +8,15 @@ const register=function(user,done){
     ],done);    
 }
 
+const authenticate=async function(input,done){
+    
+    let user=await userService.findUser({'email':input.email})
+    if(!user){ done({'message':"Not Found"})}
+    
+    let auth=await userService.comparePassword(user,input)
+    if(!auth){ done({'message':'Authentication Failed'})}
+    done(null,auth);
+}
 
-module.exports={hashPassword,register};
+
+module.exports={register,authenticate};
