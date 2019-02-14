@@ -9,13 +9,14 @@ const register=function(user,done){
 }
 
 const authenticate=async function(input,done){
-    
     let user=await userService.findUser({'email':input.email})
     if(!user){ done({'message':"Not Found"})}
     
     let auth=await userService.comparePassword(user,input)
     if(!auth){ done({'message':'Authentication Failed'})}
-    done(null,auth);
+    
+    userService.generateToken(user,done);
+
 }
 
 

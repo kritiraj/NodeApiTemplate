@@ -1,6 +1,7 @@
 const userModel=require('./users.entity');
 const bcrypt=require('bcrypt');
-
+const jwt=require('jsonwebtoken');
+const config=require('../../../config/config');
 const register=function(user,done){
     let userData=new userModel(user);
     userData.save((err,res)=>{
@@ -42,4 +43,12 @@ const comparePassword=function(user,input,done){
         return e
     });
 }
-module.exports={register,hashPassword,findUser,comparePassword}
+
+const generateToken=function(user,done){
+    console.log(config.JWT.SECRET_KEY)
+    var token = jwt.sign({ id: user.email }, config.JWT.SECRET_KEY, {
+        expiresIn: 86400 // expires in 24 hours
+      });
+      done(null,{token:token})
+}
+module.exports={register,hashPassword,findUser,comparePassword,generateToken}
